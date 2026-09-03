@@ -25,6 +25,11 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5A12B7FD2FBA3BA4006238B8 /* pong */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+				engine.h = sourcecode.cpp.h;
+				main.cpp = sourcecode.cpp.cpp;
+				paddles.h = sourcecode.cpp.h;
+			};
 			path = pong;
 			sourceTree = "<group>";
 		};
@@ -245,6 +250,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				COMPILER_INDEX_STORE_ENABLE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/Frameworks",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/include",
+					"$(inherited)",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/lib",
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/lib",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = (
+					"-lsfml-graphics",
+					"-lsfml-window",
+					"-lsfml-system",
+					"-lsfml-audio",
+					"-lsfml-network",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -253,6 +282,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				COMPILER_INDEX_STORE_ENABLE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/Frameworks",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/include",
+					"$(inherited)",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/lib",
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/Owen/Documents/SFML-3.1.0/lib",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = (
+					"-lsfml-graphics",
+					"-lsfml-window",
+					"-lsfml-system",
+					"-lsfml-audio",
+					"-lsfml-network",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
