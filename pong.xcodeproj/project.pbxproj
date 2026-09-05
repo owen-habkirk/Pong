@@ -26,8 +26,10 @@
 		5A12B7FD2FBA3BA4006238B8 /* pong */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			explicitFileTypes = {
+				ball.h = sourcecode.cpp.h;
 				engine.h = sourcecode.cpp.h;
 				main.cpp = sourcecode.cpp.cpp;
+				paddle_controllers.h = sourcecode.cpp.h;
 				paddles.h = sourcecode.cpp.h;
 			};
 			path = pong;
@@ -275,6 +277,7 @@
 					"-lsfml-network",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = singlefile;
 			};
 			name = Debug;
 		};
@@ -307,6 +310,7 @@
 					"-lsfml-network",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = singlefile;
 			};
 			name = Release;
 		};
