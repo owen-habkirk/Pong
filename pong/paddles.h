@@ -37,6 +37,10 @@ public:
     float get_x(){return paddle.getPosition().x;}
     float get_y(){return paddle.getPosition().y;}
     
+    sf::FloatRect get_bounds(){
+        return sf::FloatRect{paddle.getPosition(), paddle.getSize()};
+    }
+    
 
 };
 
@@ -84,6 +88,10 @@ public:
                 paddle.setPosition({paddle.getPosition().x, paddle.getPosition().y + 700 * delta_time});
             }
         }
+    }
+    
+    sf::FloatRect get_bounds(){
+        return sf::FloatRect{paddle.getPosition(), paddle.getSize()};
     }
     
     

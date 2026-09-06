@@ -14,28 +14,26 @@ class play_bounds{
 private:
     sf::RectangleShape bounds;
     
-    void set_position_x(float x_position){
-        bounds.setPosition({x_position - bounds.getSize().x/2, 0});
+    void set_position_x(sf::Vector2f position){
+        bounds.setPosition({position.x - bounds.getSize().x/2, position.y - bounds.getSize().y/2});
     }
     
 public:
     
-    
-    
     play_bounds(){
         bounds.setSize({
-            static_cast<float>(window.getSize().y),
-            static_cast<float>(window.getSize().y)
+            static_cast<float>(window.getSize().y + 100),
+            static_cast<float>(window.getSize().y - 10)
         });
         
-        set_position_x(window.getView().getCenter().x);
+        set_position_x(window.getView().getCenter());
         bounds.setFillColor(sf::Color::Transparent);
         bounds.setOutlineColor(sf::Color::Green);
         bounds.setOutlineThickness(5);
     }
     
-    sf::RectangleShape get_bounds(){
-        return bounds;
+    sf::FloatRect get_bounds(){
+        return sf::FloatRect{bounds.getPosition(), bounds.getSize()};
     }
     
     void draw(sf::RenderWindow& window){

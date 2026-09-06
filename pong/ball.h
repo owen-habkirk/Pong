@@ -30,13 +30,14 @@ private:
     sf::CircleShape ball_shape;
     float velocity_x = 0;
     float velocity_y = 0;
-    
+    float diameter = 20;
     
 public:
     ball(){
         ball_shape.setRadius(10);
         ball_shape.setFillColor(sf::Color::White);
         ball_shape.setPosition(window.getView().getCenter());
+        diameter = ball_shape.getRadius() * 2;
     }
     
     void reset(){
@@ -53,5 +54,22 @@ public:
     void draw(sf::RenderWindow& window){
         ball_shape.setPosition({ball_shape.getPosition().x + velocity_x * delta_time, ball_shape.getPosition().y + velocity_y * delta_time});
         window.draw(ball_shape);
+    }
+    
+    void draw_bounds(sf::RenderWindow& window){
+        //window.draw(get_bounds());
+    }
+    
+    sf::FloatRect get_bounds(){
+        return sf::FloatRect{ball_shape.getPosition(), {diameter, diameter}};
+        
+    }
+    
+    void flip_velocity_x(){
+        velocity_x *= -1;
+    }
+    
+    void flip_velocity_y(){
+        velocity_y *= -1;
     }
 };

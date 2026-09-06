@@ -60,8 +60,9 @@ int main(){
             paddle.draw(window);
             paddle_2.draw(window);
             ball.draw(window);
+            ball.draw_bounds(window);
             play_bounds.draw(window);
-            game_loop(paddle, paddle_2, ball);
+            game_loop(paddle, paddle_2, ball, play_bounds);
             
             window.display();
         }
