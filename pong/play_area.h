@@ -13,6 +13,11 @@ extern sf::RenderWindow window;
 class play_bounds{
 private:
     sf::RectangleShape bounds;
+    sf::RectangleShape midline;
+    sf::CircleShape center_ring;
+    
+    float left = 0;
+    float right = 0;
     
     void set_position_x(sf::Vector2f position){
         bounds.setPosition({position.x - bounds.getSize().x/2, position.y - bounds.getSize().y/2});
@@ -30,6 +35,19 @@ public:
         bounds.setFillColor(sf::Color::Transparent);
         bounds.setOutlineColor(sf::Color::Green);
         bounds.setOutlineThickness(5);
+        
+        left = bounds.getPosition().x;
+        right = bounds.getPosition().x + bounds.getSize().x;
+        
+        midline.setSize({1, window.getSize().y});
+        midline.setPosition({window.getVeiw().getCenter().x});
+        midline.setFillColor(sf::Color::White);
+        
+        center_ring.setRadius(50);
+        center_ring.setPosition({window.getView().getCenter().x - 50, window.getView().getCenter().y - 50});
+        center_ring.setFillColor(sf::Color::Transparent);
+        center_ring.setBorderColor(sf::Color::White);
+        center_ring.setBorderThickness(1);
     }
     
     sf::FloatRect get_bounds(){
@@ -38,5 +56,11 @@ public:
     
     void draw(sf::RenderWindow& window){
         window.draw(bounds);
+        window.draw(center_ring);
+        window.draw(midline);
+        
     }
+    
+    float get_left(){return left;}
+    float get_right(){return right;}
 };

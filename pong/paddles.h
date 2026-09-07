@@ -22,7 +22,7 @@ private:
 public:
     p1_paddle(){
         paddle.setSize({20, 150});
-        paddle.setPosition({800, 300});
+        paddle.setPosition({700, window.getView().getCenter().y - paddle.getSize().y/2});
         paddle.setFillColor(sf::Color::White);
     }
     
@@ -34,12 +34,18 @@ public:
         paddle.setPosition({x, y});
     }
     
+    void set_x(float x){
+        paddle.setPosition({x, paddle.getPosition().y});
+    }
+    
     float get_x(){return paddle.getPosition().x;}
     float get_y(){return paddle.getPosition().y;}
     
     sf::FloatRect get_bounds(){
         return sf::FloatRect{paddle.getPosition(), paddle.getSize()};
     }
+    
+
     
 
 };
@@ -57,6 +63,7 @@ public:
     p2_paddle(paddle_controller& controller)
         : ptr_controller(&controller){
         paddle.setSize({20, 150});
+        paddle.setPosition({1000, window.getView().getCenter().y - paddle.getSize().y/2});
         paddle.setFillColor(sf::Color::White);
     }
     
@@ -78,14 +85,19 @@ public:
     }
     
     void run(){
+        const float min_position = window.getSize().y - 150;
         get_controller_input();
         if(up_key){
             if(paddle.getPosition().y - 700 * delta_time >= 0){
                 paddle.setPosition({paddle.getPosition().x, paddle.getPosition().y - 700 * delta_time});
+            }else{
+                paddle.setPosition({paddle.getPosition().x, 0});
             }
         }else if(down_key){
-            if(paddle.getPosition().y + 700 * delta_time <= (window.getSize().y - 150)){
+            if(paddle.getPosition().y + 700 * delta_time <= min_position){
                 paddle.setPosition({paddle.getPosition().x, paddle.getPosition().y + 700 * delta_time});
+            }else{
+                paddle.setPosition({paddle.getPosition().x, min_position});
             }
         }
     }
@@ -94,5 +106,7 @@ public:
         return sf::FloatRect{paddle.getPosition(), paddle.getSize()};
     }
     
-    
+    void set_x(float x){
+        paddle.setPosition({x, paddle.getPosition().y});
+    }
 };

@@ -11,29 +11,30 @@
 
 extern sf::RenderWindow window;
 
-float generate_random_number(float min, float max, float abs_min){
+int generate_random_number(int min, int max, int abs_min){
     std:: random_device rd;
     std:: mt19937 gen(rd());
-    std:: uniform_int_distribution <> dist(min, max);
+    std:: uniform_int_distribution<int> dist(min, max);
+    int value;
     
-    while(std::abs(dist(gen)) < abs_min){
-        std:: uniform_int_distribution <> dist(min, max);
-    }
+    do{value = dist(gen);}while(std::abs(value) < abs_min);
+    
 
-    return dist(gen);
+    return value;
 
 }
 
 class ball{
 private:
-    
     sf::CircleShape ball_shape;
     float velocity_x = 0;
     float velocity_y = 0;
     float diameter = 20;
+    float curve_degree = 0;
+    float window_bottom;
     
 public:
-    ball(){
+    ball(): window_bottom(window.getSize().y){
         ball_shape.setRadius(10);
         ball_shape.setFillColor(sf::Color::White);
         ball_shape.setPosition(window.getView().getCenter());
@@ -44,15 +45,28 @@ public:
         ball_shape.setPosition(window.getView().getCenter());
         velocity_x = 0;
         velocity_y = 0;
+        curve_degree = 0;
+    }
+    
+    void update(){
+        float y_position = ball_shape.getPosition().y;
+        if(y_position < 0 || y_position > window_bottom){
+            reset();
+        }
+        velocity_y += curve_degree * delta_time;
+        ball_shape.setPosition({ball_shape.getPosition().x + velocity_x * delta_time, ball_shape.getPosition().y + velocity_y * delta_time});
+        
     }
     
     void serve(){
-        velocity_x = generate_random_number(-700, 700, 600);
-        velocity_y = generate_random_number(-400, 400, 300);
+        if(velocity_x == 0 && velocity_y == 0){
+            velocity_x = generate_random_number(-600, 600, 500);
+            velocity_y = generate_random_number(-400, 400, 300);
+        }
     }
     
     void draw(sf::RenderWindow& window){
-        ball_shape.setPosition({ball_shape.getPosition().x + velocity_x * delta_time, ball_shape.getPosition().y + velocity_y * delta_time});
+        
         window.draw(ball_shape);
     }
     
@@ -71,5 +85,9 @@ public:
     
     void flip_velocity_y(){
         velocity_y *= -1;
+    }
+    
+    void set_curve(float curve){
+        curve_degree = curve * 7;
     }
 };

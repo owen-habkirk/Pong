@@ -20,6 +20,9 @@ sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
 sf::RenderWindow window(desktopMode, "Pong", sf::Style::Default);
 float delta_time;
 
+int player_1_score = 0;
+int player_2_score = 0;
+
 int main(){
     sf::Clock delta_clock;
     
