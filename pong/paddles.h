@@ -12,6 +12,8 @@
 extern float delta_time;
 extern sf::RenderWindow window;
 
+
+
 class p1_paddle{
 private:
     sf::RectangleShape paddle;
@@ -57,11 +59,10 @@ private:
     
     sf::RectangleShape paddle;
     
-    paddle_controller* ptr_controller;
+    paddle_controller* ptr_controller = nullptr;
     
 public:
-    p2_paddle(paddle_controller& controller)
-        : ptr_controller(&controller){
+    p2_paddle(){
         paddle.setSize({20, 150});
         paddle.setPosition({1000, window.getView().getCenter().y - paddle.getSize().y/2});
         paddle.setFillColor(sf::Color::White);
@@ -72,28 +73,38 @@ public:
     }
     
     void get_controller_input(){
+        //std::cout << "control" << std::endl;
         if(ptr_controller->get_controls() == sf::Keyboard::Key::Up){
+            //std::cout << "up" << std::endl;
             up_key = true;
             down_key = false;
         }else if(ptr_controller->get_controls() == sf::Keyboard::Key::Down){
+            //std::cout << "down" << std::endl;
             up_key = false;
             down_key = true;
         }else if(ptr_controller->get_controls() == std::nullopt){
+            //std::cout << "null" << std::endl;
             up_key = false;
             down_key = false;
         }
     }
     
-    void run(){
+    void run(ball& ball){
+        //std::cout << "run" << std::endl;
         const float min_position = window.getSize().y - 150;
+        
+        ptr_controller->run_ai(ball, *this);
+        
         get_controller_input();
         if(up_key){
+            
             if(paddle.getPosition().y - 700 * delta_time >= 0){
                 paddle.setPosition({paddle.getPosition().x, paddle.getPosition().y - 700 * delta_time});
             }else{
                 paddle.setPosition({paddle.getPosition().x, 0});
             }
         }else if(down_key){
+
             if(paddle.getPosition().y + 700 * delta_time <= min_position){
                 paddle.setPosition({paddle.getPosition().x, paddle.getPosition().y + 700 * delta_time});
             }else{
@@ -108,5 +119,13 @@ public:
     
     void set_x(float x){
         paddle.setPosition({x, paddle.getPosition().y});
+    }
+    
+    sf::Vector2f get_position(){
+        return paddle.getPosition();
+    }
+    
+    void set_controller(paddle_controller& controller){
+        ptr_controller = &controller;
     }
 };

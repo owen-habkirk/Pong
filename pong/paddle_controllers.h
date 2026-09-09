@@ -9,6 +9,9 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <optional>
 
+class p2_paddle;
+class ball;
+
 extern bool up_key;
 extern bool down_key;
 
@@ -18,6 +21,7 @@ public:
     virtual std::optional<sf::Keyboard::Key> get_controls(){
         return std::nullopt;
     }
+    virtual void run_ai(ball& ball, p2_paddle& paddle){};
 };
 
 class player2_controller : public paddle_controller{
@@ -38,6 +42,7 @@ private:
     bool up_key = false;
     bool down_key = false;
 public:
+    void run_ai(ball& ball, p2_paddle& paddle) override;
     
     std::optional<sf::Keyboard::Key> get_controls() override {
         if(up_key){

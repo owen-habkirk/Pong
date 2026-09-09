@@ -4,7 +4,7 @@
 //
 //  Created by Owen Habkirk on 5/17/26.
 //
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "engine.h"
 #include "paddles.h"
@@ -22,6 +22,10 @@ float delta_time;
 
 int player_1_score = 0;
 int player_2_score = 0;
+int player_count = 1;
+
+player2_controller manual_controller;
+class ai_controller ai_controller;
 
 int main(){
     sf::Clock delta_clock;
@@ -29,13 +33,15 @@ int main(){
     std::cout << window.getSize().x << ", " << window.getSize().y << std::endl;
     
     pong_gamestate gamestate = paused;
-    player2_controller controller;
     p1_paddle paddle;
-    p2_paddle paddle_2(controller);
+    p2_paddle paddle_2;
     ball ball;
     play_bounds play_bounds;
-    
-
+    if(player_count == 1){
+        paddle_2.set_controller(ai_controller);
+    }else if(player_count == 2){
+        paddle_2.set_controller(manual_controller);
+    }
     
 
     while (window.isOpen()) {
@@ -62,9 +68,9 @@ int main(){
         if(window.isOpen()){
             paddle.draw(window);
             paddle_2.draw(window);
-            ball.draw(window);
-            ball.draw_bounds(window);
             play_bounds.draw(window);
+            ball.draw(window);
+            
             game_loop(paddle, paddle_2, ball, play_bounds);
             
             window.display();

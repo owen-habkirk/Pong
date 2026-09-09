@@ -39,15 +39,15 @@ public:
         left = bounds.getPosition().x;
         right = bounds.getPosition().x + bounds.getSize().x;
         
-        midline.setSize({1, window.getSize().y});
-        midline.setPosition({window.getVeiw().getCenter().x});
-        midline.setFillColor(sf::Color::White);
+        midline.setSize({3, static_cast<float>(window.getSize().y)});
+        midline.setPosition({window.getView().getCenter().x, 0});
+        midline.setFillColor(sf::Color::Green);
         
-        center_ring.setRadius(50);
-        center_ring.setPosition({window.getView().getCenter().x - 50, window.getView().getCenter().y - 50});
+        center_ring.setRadius(80);
+        center_ring.setPosition({window.getView().getCenter().x - center_ring.getRadius(), window.getView().getCenter().y - center_ring.getRadius()});
         center_ring.setFillColor(sf::Color::Transparent);
-        center_ring.setBorderColor(sf::Color::White);
-        center_ring.setBorderThickness(1);
+        center_ring.setOutlineColor(sf::Color::Green);
+        center_ring.setOutlineThickness(3);
     }
     
     sf::FloatRect get_bounds(){
