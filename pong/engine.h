@@ -11,6 +11,8 @@
 #include "paddles.h"
 #include "ball.h"
 #include "play_area.h"
+#include "sounds.h"
+#include "scoreboard.h"
 
 bool up_key = false;
 bool down_key = false;
@@ -19,6 +21,7 @@ bool s_key = false;
 bool enter_key = false;
 bool prev_enter_key = false;
 bool r_key = false;
+bool prev_r = false;
 bool num1_key = false;
 bool num2_key = false;
 
@@ -28,6 +31,9 @@ extern int player_2_score;
 extern int player_count;
 extern ai_controller ai_controller;
 extern player2_controller manual_controller;
+extern sound_effect bounce;
+extern sound_effect score;
+extern scoreboard scoreboard;
 
 float predicted_position;
 
@@ -37,13 +43,19 @@ inline void ai_controller::run_ai(ball& ball, p2_paddle& paddle){
     const float paddle_center_y = paddle_position.y + 75;
     const float ball_velocity_x = ball.get_velo_x();
     const float ball_velocity_y = ball.get_velo_y();
-    const float predicted_x_velo = generate_random_number(450, 750, 0);
+    const float predicted_x_velo = generate_random_number(400, 800, 0);
     
     if((paddle_position.x - ball_position.x) > 250){
         if(ball_velocity_x == 0){
             predicted_position = window.getView().getCenter().y;
+
         }else{
             predicted_position = ball_position.y + ball_velocity_y * ((paddle_position.x - ball_position.x)/predicted_x_velo);
+            /*if(predicted_position < 0){
+                predicted_position = ball_position.y + (-ball_velocity_y) * ((paddle_position.x - (ball_position.x))/predicted_x_velo);
+            }else if(predicted_position > window.getSize().y){
+                predicted_position = ball_position.y + (-ball_velocity_y) * ((paddle_position.x - ball_position.x)/predicted_x_velo);
+            }*/
         }
     }
     
@@ -85,6 +97,8 @@ inline void ai_controller::run_ai(ball& ball, p2_paddle& paddle){
 enum collsion_variables{
     bounds_right,
     bounds_left,
+    bounds_top,
+    bounds_bottom,
     paddle_p1,
     paddle_p2,
     inter,
@@ -108,17 +122,20 @@ void colllision_check(ball& ball, const sf::FloatRect& paddle_1, const sf::Float
         ball.set_curve(ball_bounds.getCenter().y - paddle_1.getCenter().y);
         ball.flip_velocity_x();
         recently_collided = paddle_p1;
+        bounce.play();
         return;
     }else if(ball_bounds.findIntersection(paddle_2) && recently_collided != paddle_p2 && recently_collided != inter){
         ball.set_curve(ball_bounds.getCenter().y - paddle_2.getCenter().y);
         ball.flip_velocity_x();
         recently_collided = paddle_p2;
+        bounce.play();
         return;
     }else if(ball_left <= play_bounds_left && recently_collided != bounds_left && recently_collided != inter){
         //ball.flip_velocity_x();
         player_2_score ++;
         ball.reset();
         recently_collided = null;
+        score.play();
         //recently_collided = bounds_left;
         return;
     }else if(ball_right >= play_bounds_right && recently_collided != bounds_right && recently_collided != inter){
@@ -126,24 +143,24 @@ void colllision_check(ball& ball, const sf::FloatRect& paddle_1, const sf::Float
         player_1_score ++;
         ball.reset();
         recently_collided = null;
+        score.play();
         //recently_collided = bounds_right;
         return;
-    }else if(ball_top <= play_bounds_top  && recently_collided != inter){
+    }else if(ball_top <= play_bounds_top && recently_collided != bounds_top && recently_collided != inter){
         ball.flip_velocity_y();
-       
+        recently_collided = bounds_top;
         //recently_collided = bounds_top;
+        bounce.play();
         return;
-    }else if(ball_bottom >= play_bounds_bottom && recently_collided != inter){
+    }else if(ball_bottom >= play_bounds_bottom && recently_collided != bounds_bottom && recently_collided != inter){
         ball.flip_velocity_y();
-        
+        recently_collided = bounds_bottom;
+        bounce.play();
         //recently_collided = bounds_bottom;
         return;
-    }/*else if(recently_collided != null && recently_collided != inter){
-        recently_collided = inter;
-        return
-    }else if(recently_collided == inter){
+    }else if(recently_collided == bounds_top || recently_collided == bounds_bottom){
         recently_collided = null;
-    }*/
+    }
 };
 
 
@@ -214,9 +231,16 @@ void handle_input(p1_paddle& paddle, p2_paddle& paddle_2, ball& ball){
             ball.serve();
         }
     }
-    if(r_key){
-        ball.reset();
-        recently_collided = null;
+    if(r_key != prev_r){
+        if(r_key){
+            if(!prev_r && ball.get_velo_x() == 0){
+                player_1_score = 0;
+                player_2_score = 0;
+            }
+            ball.reset();
+            recently_collided = null;
+        }
+        prev_r = r_key;
     }
     
     if(num1_key){
@@ -238,6 +262,7 @@ void game_loop(p1_paddle& paddle1, p2_paddle& paddle2, ball& ball, play_bounds& 
     std::call_once(p2_x_position, [&]{
         paddle2.set_x(play_bounds.get_right() - 60);
     });
+    scoreboard.set_score(std::to_string(player_1_score), std::to_string(player_2_score), play_bounds.get_bounds());
     ball.update();
     
     handle_input(paddle1, paddle2, ball);

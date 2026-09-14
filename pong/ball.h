@@ -57,11 +57,11 @@ public:
     
     void update(){
         float y_position = ball_shape.getPosition().y;
-        if(y_position < 0){
+        /*if(y_position < 0){
             ball_shape.setPosition({ball_shape.getPosition().x, diameter});
         }else if(y_position > window_bottom - diameter){
             ball_shape.setPosition({ball_shape.getPosition().x, window_bottom - diameter});
-        }
+        }*/
         velocity_y += curve_degree * delta_time;
         ball_shape.setPosition({ball_shape.getPosition().x + velocity_x * delta_time, ball_shape.getPosition().y + velocity_y * delta_time});
         
@@ -79,9 +79,7 @@ public:
         window.draw(ball_shape);
     }
     
-    void draw_bounds(sf::RenderWindow& window){
-        //window.draw(get_bounds());
-    }
+  
     
     sf::FloatRect get_bounds(){
         return sf::FloatRect{ball_shape.getPosition(), {diameter, diameter}};

@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "engine.h"
 #include "paddles.h"
+#include "scoreboard.h"
 
 enum pong_gamestate{
     playing,
@@ -26,6 +27,19 @@ int player_count = 1;
 
 player2_controller manual_controller;
 class ai_controller ai_controller;
+play_bounds play_bounds;
+class scoreboard scoreboard({window.getView().getCenter().x - 200, 50}, {window.getView().getCenter().x + 100, 50}, play_bounds.get_bounds());
+controls controls;
+
+sound_effect bounce(
+    "/Users/Owen/Documents/pong/pong/pong_assets/bounce.wav",
+    15
+);
+
+sound_effect score(
+    "/Users/Owen/Documents/pong/pong/pong_assets/score.wav",
+    1
+);
 
 int main(){
     sf::Clock delta_clock;
@@ -36,7 +50,7 @@ int main(){
     p1_paddle paddle;
     p2_paddle paddle_2;
     ball ball;
-    play_bounds play_bounds;
+    
     if(player_count == 1){
         paddle_2.set_controller(ai_controller);
     }else if(player_count == 2){
@@ -70,7 +84,8 @@ int main(){
             paddle_2.draw(window);
             play_bounds.draw(window);
             ball.draw(window);
-            
+            scoreboard.draw(window);
+            controls.draw(window);
             game_loop(paddle, paddle_2, ball, play_bounds);
             
             window.display();

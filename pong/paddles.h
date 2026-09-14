@@ -90,6 +90,9 @@ public:
     }
     
     void run(ball& ball){
+        if(ptr_controller == nullptr){
+            return;
+        }
         //std::cout << "run" << std::endl;
         const float min_position = window.getSize().y - 150;
         
