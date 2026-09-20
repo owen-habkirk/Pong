@@ -25,7 +25,7 @@ bool prev_r = false;
 bool num1_key = false;
 bool num2_key = false;
 
-extern sf::RenderWindow window;
+//extern sf::RenderWindow window;
 extern int player_1_score;
 extern int player_2_score;
 extern int player_count;
@@ -33,11 +33,10 @@ extern ai_controller ai_controller;
 extern player2_controller manual_controller;
 extern sound_effect bounce;
 extern sound_effect score;
-extern scoreboard scoreboard;
 
 float predicted_position;
 
-inline void ai_controller::run_ai(ball& ball, p2_paddle& paddle){
+inline void ai_controller::run_ai(ball& ball, p2_paddle& paddle, sf::RenderWindow& window){
     const sf::Vector2f ball_position = ball.get_position();
     const sf::Vector2f paddle_position = paddle.get_position();
     const float paddle_center_y = paddle_position.y + 75;
@@ -107,7 +106,7 @@ enum collsion_variables{
 
 collsion_variables recently_collided = null;
 
-void colllision_check(ball& ball, const sf::FloatRect& paddle_1, const sf::FloatRect& paddle_2, const sf::FloatRect& play_bounds){
+void colllision_check(ball& ball, const sf::FloatRect& paddle_1, const sf::FloatRect& paddle_2, const sf::FloatRect& play_bounds, sf::RenderWindow& window){
     const sf::FloatRect ball_bounds = ball.get_bounds();
     const float play_bounds_right = play_bounds.position.x + play_bounds.size.x;
     const float play_bounds_left = play_bounds.position.x;
@@ -133,7 +132,7 @@ void colllision_check(ball& ball, const sf::FloatRect& paddle_1, const sf::Float
     }else if(ball_left <= play_bounds_left && recently_collided != bounds_left && recently_collided != inter){
         //ball.flip_velocity_x();
         player_2_score ++;
-        ball.reset();
+        ball.reset(window);
         recently_collided = null;
         score.play();
         //recently_collided = bounds_left;
@@ -141,7 +140,7 @@ void colllision_check(ball& ball, const sf::FloatRect& paddle_1, const sf::Float
     }else if(ball_right >= play_bounds_right && recently_collided != bounds_right && recently_collided != inter){
         //ball.flip_velocity_x();
         player_1_score ++;
-        ball.reset();
+        ball.reset(window);
         recently_collided = null;
         score.play();
         //recently_collided = bounds_right;
@@ -210,7 +209,7 @@ void keyrelease_event(const auto& key){
      
 }
 
-void handle_input(p1_paddle& paddle, p2_paddle& paddle_2, ball& ball){
+void handle_input(p1_paddle& paddle, p2_paddle& paddle_2, ball& ball, sf::RenderWindow& window){
     if(w_key){
         if(paddle.get_y() - 700 * delta_time >= 0){
             paddle.set_position(paddle.get_x(), paddle.get_y() - 700 * delta_time);
@@ -237,7 +236,7 @@ void handle_input(p1_paddle& paddle, p2_paddle& paddle_2, ball& ball){
                 player_1_score = 0;
                 player_2_score = 0;
             }
-            ball.reset();
+            ball.reset(window);
             recently_collided = null;
         }
         prev_r = r_key;
@@ -255,7 +254,7 @@ void handle_input(p1_paddle& paddle, p2_paddle& paddle_2, ball& ball){
 std::once_flag p1_x_position;
 std::once_flag p2_x_position;
 
-void game_loop(p1_paddle& paddle1, p2_paddle& paddle2, ball& ball, play_bounds& play_bounds){
+void game_loop(p1_paddle& paddle1, p2_paddle& paddle2, ball& ball, play_bounds& play_bounds, scoreboard& scoreboard, sf::RenderWindow& window){
     std::call_once(p1_x_position, [&](){
         paddle1.set_x(play_bounds.get_left() + 40);
     });
@@ -265,12 +264,12 @@ void game_loop(p1_paddle& paddle1, p2_paddle& paddle2, ball& ball, play_bounds& 
     scoreboard.set_score(std::to_string(player_1_score), std::to_string(player_2_score), play_bounds.get_bounds());
     ball.update();
     
-    handle_input(paddle1, paddle2, ball);
+    handle_input(paddle1, paddle2, ball, window);
     //paddle1.run(w_key, s_key);
     
-    paddle2.run(ball);
+    paddle2.run(ball, window);
     
-    colllision_check(ball, paddle1.get_bounds(), paddle2.get_bounds(), play_bounds.get_bounds());
+    colllision_check(ball, paddle1.get_bounds(), paddle2.get_bounds(), play_bounds.get_bounds(), window);
     
     std::cout << player_1_score << " - " << player_2_score << std::endl;
 }

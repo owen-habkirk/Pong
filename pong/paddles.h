@@ -10,10 +10,6 @@
 #include "paddle_controllers.h"
 
 extern float delta_time;
-extern sf::RenderWindow window;
-
-
-
 class p1_paddle{
 private:
     sf::RectangleShape paddle;
@@ -22,7 +18,7 @@ private:
     bool s_key = false;
     
 public:
-    p1_paddle(){
+    p1_paddle(sf::RenderWindow& window){
         paddle.setSize({20, 150});
         paddle.setPosition({700, window.getView().getCenter().y - paddle.getSize().y/2});
         paddle.setFillColor(sf::Color::White);
@@ -62,7 +58,7 @@ private:
     paddle_controller* ptr_controller = nullptr;
     
 public:
-    p2_paddle(){
+    p2_paddle(sf::RenderWindow& window){
         paddle.setSize({20, 150});
         paddle.setPosition({1000, window.getView().getCenter().y - paddle.getSize().y/2});
         paddle.setFillColor(sf::Color::White);
@@ -89,14 +85,14 @@ public:
         }
     }
     
-    void run(ball& ball){
+    void run(ball& ball, sf::RenderWindow& window){
         if(ptr_controller == nullptr){
             return;
         }
         //std::cout << "run" << std::endl;
         const float min_position = window.getSize().y - 150;
         
-        ptr_controller->run_ai(ball, *this);
+        ptr_controller->run_ai(ball, *this, window);
         
         get_controller_input();
         if(up_key){

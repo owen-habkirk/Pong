@@ -8,8 +8,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-extern sf::RenderWindow window;
-
 class play_bounds{
 private:
     sf::RectangleShape bounds;
@@ -25,7 +23,7 @@ private:
     
 public:
     
-    play_bounds(){
+    play_bounds(sf::RenderWindow& window){
         bounds.setSize({
             static_cast<float>(window.getSize().y + 100),
             static_cast<float>(window.getSize().y - 10)

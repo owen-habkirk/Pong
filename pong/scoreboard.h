@@ -6,15 +6,15 @@
 //
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <string>
-
-extern sf::RenderWindow window;
 
 class scoreboard{
 private:
     sf::Font font;
     sf::Text p1_score;
     sf::Text p2_score;
+    bool font_loaded = false;
     
     void center_p1_text(const sf::FloatRect& bounds){
         float bounds_center = bounds.position.x + (bounds.size.x / 2);
@@ -33,8 +33,12 @@ private:
 public:
     scoreboard(sf::Vector2f p1_position, sf::Vector2f p2_position, const sf::FloatRect& bounds)
     :p1_score(font), p2_score(font){
-        if(font.openFromFile("/Users/Owen/Documents/pong/pong/pong_assets/Orbitron/Orbitron-VariableFont_wght.ttf")){
+        font_loaded = font.openFromFile("pong_assets/Orbitron/orbitron_font.ttf");
+        if(font_loaded){
             std::cout << "font loaded" << std::endl;
+        }else{
+            std::cerr << "failed to load font: " << std::endl;
+            return;
         }
         
         p1_score.setCharacterSize(100);
@@ -49,6 +53,10 @@ public:
     }
     
     void set_score(const std::string p1, const std::string p2, const sf::FloatRect& bounds){
+        if(!font_loaded){
+            return;
+        }
+
         if(p1 != p1_score.getString()){
             center_p1_text(bounds);
         }
@@ -60,6 +68,10 @@ public:
     }
     
     void draw(sf::RenderWindow& window){
+        if(!font_loaded){
+            return;
+        }
+
         window.draw(p1_score);
         window.draw(p2_score);
     }
@@ -69,11 +81,15 @@ class controls{
 private:
     sf::Font font;
     sf::Text text;
+    bool font_loaded = false;
 public:
     controls()
     :text(font){
-        if(font.openFromFile("/Users/Owen/Documents/pong/pong/pong_assets/Orbitron/Orbitron-VariableFont_wght.ttf")){
+        font_loaded = font.openFromFile("pong_assets/Orbitron/orbitron_font.ttf");
+        if(font_loaded){
             std::cout << "font loaded" << std::endl;
+        }else{
+            std::cerr << "failed to load controls font" << std::endl;
         }
         text.setString("[1] - Single Player \n [2] - Two Players \n [R] - Reset Ball \n [R x2] - Restart \n [W/S] - Left Paddle Up/Down \n [Up/Down] - Right Paddle Up/Down");
         
@@ -83,7 +99,10 @@ public:
     }
     
     void draw(sf::RenderWindow& window){
+        if(!font_loaded){
+            return;
+        }
+
         window.draw(text);
     }
 };
-

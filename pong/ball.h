@@ -9,7 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 
-extern sf::RenderWindow window;
 extern float delta_time;
 
 int generate_random_number(int min, int max, int abs_min){
@@ -35,7 +34,7 @@ private:
     float window_bottom;
     
 public:
-    ball(): window_bottom(window.getSize().y){
+    ball(sf::RenderWindow& window): window_bottom(window.getSize().y){
         ball_shape.setRadius(10);
         ball_shape.setFillColor(sf::Color::White);
         ball_shape.setPosition({
@@ -45,7 +44,7 @@ public:
         diameter = ball_shape.getRadius() * 2;
     }
     
-    void reset(){
+    void reset(sf::RenderWindow& window){
         ball_shape.setPosition({
             (window.getView().getCenter().x - ball_shape.getRadius()),
             (window.getView().getCenter().y - ball_shape.getRadius())

@@ -10,15 +10,10 @@
 #include "paddles.h"
 #include "scoreboard.h"
 
-enum pong_gamestate{
-    playing,
-    paused,
-};
 
 
 
-sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
-sf::RenderWindow window(desktopMode, "Pong", sf::Style::Default);
+
 float delta_time;
 
 int player_1_score = 0;
@@ -27,29 +22,32 @@ int player_count = 1;
 
 player2_controller manual_controller;
 class ai_controller ai_controller;
-play_bounds play_bounds;
-class scoreboard scoreboard({window.getView().getCenter().x - 200, 50}, {window.getView().getCenter().x + 100, 50}, play_bounds.get_bounds());
-controls controls;
 
 sound_effect bounce(
-    "/Users/Owen/Documents/pong/pong/pong_assets/bounce.wav",
+    "pong_assets/bounce.wav",
     15
 );
 
 sound_effect score(
-    "/Users/Owen/Documents/pong/pong/pong_assets/score.wav",
+    "pong_assets/score.wav",
     1
 );
 
 int main(){
+    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    sf::RenderWindow window(desktopMode, "Pong", sf::Style::Default);
     sf::Clock delta_clock;
+
+    play_bounds play_bounds(window);
+    class scoreboard scoreboard({window.getView().getCenter().x - 200, 50}, {window.getView().getCenter().x + 100, 50}, play_bounds.get_bounds());
+    controls controls;
     
     std::cout << window.getSize().x << ", " << window.getSize().y << std::endl;
     
-    pong_gamestate gamestate = paused;
-    p1_paddle paddle;
-    p2_paddle paddle_2;
-    ball ball;
+    
+    p1_paddle paddle(window);
+    p2_paddle paddle_2(window);
+    ball ball(window);
     
     if(player_count == 1){
         paddle_2.set_controller(ai_controller);
@@ -86,7 +84,7 @@ int main(){
             ball.draw(window);
             scoreboard.draw(window);
             controls.draw(window);
-            game_loop(paddle, paddle_2, ball, play_bounds);
+            game_loop(paddle, paddle_2, ball, play_bounds, scoreboard, window);
             
             window.display();
         }

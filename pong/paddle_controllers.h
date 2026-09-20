@@ -21,7 +21,7 @@ public:
     virtual std::optional<sf::Keyboard::Key> get_controls(){
         return std::nullopt;
     }
-    virtual void run_ai(ball& ball, p2_paddle& paddle){};
+    virtual void run_ai(ball& ball, p2_paddle& paddle, sf::RenderWindow& window){};
 };
 
 class player2_controller : public paddle_controller{
@@ -42,7 +42,7 @@ private:
     bool up_key = false;
     bool down_key = false;
 public:
-    void run_ai(ball& ball, p2_paddle& paddle) override;
+    void run_ai(ball& ball, p2_paddle& paddle, sf::RenderWindow& window) override;
     
     std::optional<sf::Keyboard::Key> get_controls() override {
         if(up_key){
